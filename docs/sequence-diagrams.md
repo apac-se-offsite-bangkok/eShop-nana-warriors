@@ -289,7 +289,7 @@ sequenceDiagram
     WebApp->>IdentityAPI: POST /connect/token (exchange code for tokens)
     IdentityAPI-->>WebApp: JWT access token + refresh token
 
-    WebApp->>WebApp: Store tokens in auth cookie (2h lifetime)
+    WebApp->>WebApp: Store tokens in auth cookie
     WebApp-->>User: Redirect to original page (authenticated)
 
     Note over User,API: Authenticated API call
