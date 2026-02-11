@@ -149,3 +149,17 @@
         font-size: 1.5rem;
     }
 }
+/* Dark mode adjustments */
+html.dark-scheme .eshop-header-intro h1,
+html.dark-scheme .eshop-header-intro p {
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+html.dark-scheme .eshop-header .logo-header {
+    filter: brightness(0) invert(1);
+}
+
+html.dark-scheme .eshop-header-navbar {
+    color: #e0e0e0;
+}

@@ -289,3 +289,25 @@ h1:focus {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+/* Dark mode color scheme */
+html.dark-scheme {
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+}
+
+html.dark-scheme body {
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+}
+
+html.dark-scheme .button.button-primary {
+    background: #e0e0e0;
+    color: #1a1a1a;
+}
+
+html.dark-scheme .button.button-secondary {
+    border: 1px solid #888;
+    background: #2a2a2a;
+    color: #e0e0e0;
+}

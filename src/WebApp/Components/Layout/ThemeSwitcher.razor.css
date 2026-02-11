@@ -1,0 +1,28 @@
+.mode-switcher {
+    background: transparent;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    transition: transform 0.2s ease;
+}
+
+.mode-switcher:hover {
+    transform: scale(1.1);
+}
+
+.mode-switcher:active {
+    transform: scale(0.95);
+}
+
+.mode-switcher svg {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+html.dark-scheme .mode-switcher {
+    color: #e0e0e0;
+}
