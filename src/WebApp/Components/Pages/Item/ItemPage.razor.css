@@ -73,3 +73,20 @@ a {
         padding: 0 3rem 0 3rem;
     }    
 }
+/* Dark mode adjustments */
+html.dark-scheme .item-details {
+    color: #e0e0e0;
+}
+
+html.dark-scheme .price {
+    color: #e0e0e0;
+}
+
+html.dark-scheme .add-to-cart button {
+    background-color: #e0e0e0;
+    color: #1a1a1a;
+}
+
+html.dark-scheme .add-to-cart button:hover {
+    background-color: #f0f0f0;
+}

@@ -17,3 +17,8 @@
     font-weight: 400;
     line-height: 0.25rem;
 }
+
+/* Dark mode adjustments */
+html.dark-scheme .cart-badge {
+    background-color: #e85d75;
+}

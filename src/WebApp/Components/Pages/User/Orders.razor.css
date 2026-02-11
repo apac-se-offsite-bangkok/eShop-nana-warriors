@@ -74,3 +74,17 @@
         padding: 0 3rem;
     }    
 }
+/* Dark mode adjustments */
+html.dark-scheme .orders-list {
+    color: #e0e0e0;
+}
+
+html.dark-scheme .order-item {
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+}
+
+html.dark-scheme .order-item h3,
+html.dark-scheme .order-item p {
+    color: #e0e0e0;
+}
