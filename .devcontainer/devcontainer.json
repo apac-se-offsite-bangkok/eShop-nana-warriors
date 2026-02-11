@@ -1,0 +1,47 @@
+{
+  "name": "eShop .NET Aspire",
+  "image": "mcr.microsoft.com/devcontainers/dotnet:10.0",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "moby": true,
+      "installDockerBuildx": true,
+      "installDockerComposeSwitch": true
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csharp",
+        "ms-dotnettools.csdevkit",
+        "ms-azuretools.vscode-docker",
+        "ms-playwright.playwright",
+        "humao.rest-client",
+        "eamodio.gitlens",
+        "EditorConfig.EditorConfig"
+      ],
+      "settings": {
+        "dotnet.defaultSolution": "eShop.slnx"
+      }
+    }
+  },
+  "forwardPorts": [
+    5000,
+    5001,
+    7000,
+    7001,
+    15025,
+    18888,
+    19888
+  ],
+  "postCreateCommand": "dotnet workload install aspire && dotnet restore && npm install",
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "8gb",
+    "storage": "32gb"
+  },
+  "remoteUser": "vscode"
+}
