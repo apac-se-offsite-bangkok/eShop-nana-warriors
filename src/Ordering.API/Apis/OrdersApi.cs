@@ -135,6 +135,12 @@ public static class OrdersApi
             return TypedResults.BadRequest("RequestId is missing.");
         }
 
+        if (string.IsNullOrWhiteSpace(request.CardNumber))
+        {
+            services.Logger.LogWarning("CreateOrder rejected - CardNumber is required");
+            return TypedResults.BadRequest("CardNumber is required.");
+        }
+
         using (services.Logger.BeginScope(new List<KeyValuePair<string, object>> { new("IdentifiedCommandId", requestId) }))
         {
             var maskedCCNumber = request.CardNumber.Substring(request.CardNumber.Length - 4).PadLeft(request.CardNumber.Length, 'X');
