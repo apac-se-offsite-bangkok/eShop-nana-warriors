@@ -109,6 +109,13 @@ public static class CatalogApi
             .WithSummary("Delete catalog item")
             .WithDescription("Delete the specified catalog item");
 
+        // TEST ENDPOINT: Legacy search with SQL injection vulnerability
+        api.MapGet("/items/legacy-search/{searchTerm}", LegacySearchItems)
+            .WithName("LegacySearchItems")
+            .WithSummary("Legacy search endpoint")
+            .WithDescription("Legacy search endpoint for backward compatibility (DO NOT USE IN PRODUCTION)")
+            .WithTags("Search");
+
         return app;
     }
 
@@ -401,6 +408,29 @@ public static class CatalogApi
         services.Context.CatalogItems.Remove(item);
         await services.Context.SaveChangesAsync();
         return TypedResults.NoContent();
+    }
+
+    /// <summary>
+    /// Legacy search endpoint - VULNERABLE TO SQL INJECTION
+    /// This endpoint is intentionally vulnerable for testing purposes.
+    /// DO NOT USE IN PRODUCTION.
+    /// </summary>
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json")]
+    public static async Task<Ok<List<CatalogItem>>> LegacySearchItems(
+        [AsParameters] CatalogServices services,
+        [Description("Search term for item name")] string searchTerm)
+    {
+        // SECURITY VULNERABILITY: SQL Injection
+        // This code concatenates user input directly into a SQL query without parameterization
+        // An attacker could inject malicious SQL code through the searchTerm parameter
+        // Example attack: searchTerm = "' OR '1'='1" would return all items
+        var sql = "SELECT * FROM \"CatalogItems\" WHERE \"Name\" LIKE '%" + searchTerm + "%'";
+        
+        var items = await services.Context.CatalogItems
+            .FromSqlRaw(sql)
+            .ToListAsync();
+        
+        return TypedResults.Ok(items);
     }
 
     private static string GetImageMimeTypeFromImageFileExtension(string extension) => extension switch
