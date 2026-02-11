@@ -61,3 +61,15 @@
         flex-basis: calc(50% - 3rem);
     }    
 }
+/* Dark mode adjustments */
+html.dark-scheme .catalog-item:hover {
+    border: 2px solid #e0e0e0;
+}
+
+html.dark-scheme .catalog-product-content .name {
+    color: #e0e0e0;
+}
+
+html.dark-scheme .catalog-product-content .price {
+    color: #b0b0b0;
+}

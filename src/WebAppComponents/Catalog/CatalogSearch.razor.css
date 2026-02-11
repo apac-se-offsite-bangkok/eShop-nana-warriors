@@ -106,3 +106,29 @@
     justify-content: space-between;
   }
 }
+/* Dark mode adjustments */
+html.dark-scheme .catalog-search .search-badge {
+    background: #e0e0e0;
+    color: #1a1a1a;
+}
+
+html.dark-scheme .catalog-search-group h3 {
+    color: #e0e0e0;
+}
+
+html.dark-scheme .catalog-search-group .catalog-search-group-tags {
+    border-top: 1px solid #555;
+}
+
+html.dark-scheme .catalog-search-tag {
+    color: #b0b0b0;
+}
+
+html.dark-scheme .catalog-search-tag:hover {
+    background: #3a3a3a;
+}
+
+html.dark-scheme .catalog-search-tag.active {
+    background: #e0e0e0;
+    color: #1a1a1a;
+}

@@ -139,3 +139,7 @@
         flex-wrap: wrap;
     }
 }
+/* Dark mode adjustments */
+html.dark-scheme .catalog-items {
+    color: #e0e0e0;
+}

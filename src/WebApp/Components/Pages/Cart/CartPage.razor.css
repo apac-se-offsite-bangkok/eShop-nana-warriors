@@ -161,3 +161,27 @@
         flex-direction: column-reverse;
     } 
 }
+/* Dark mode adjustments */
+html.dark-scheme .cart-items .cart-item-header,
+html.dark-scheme .cart-items .cart-item {
+    border-bottom: 1px solid #444;
+}
+
+html.dark-scheme .cart-items .catalog-item-info p {
+    color: #e0e0e0;
+}
+
+html.dark-scheme .cart-totals {
+    background: #2a2a2a;
+    border: 1px solid #444;
+}
+
+html.dark-scheme .cart-totals-row {
+    color: #e0e0e0;
+    border-bottom: 1px solid #444;
+}
+
+html.dark-scheme .cart-totals-row h3,
+html.dark-scheme .cart-totals-row p {
+    color: #e0e0e0;
+}
