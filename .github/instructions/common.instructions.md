@@ -190,6 +190,80 @@ e2e/
 - Credentials via env vars: `USERNAME1`, `PASSWORD`
 - Config: [playwright.config.ts](../../playwright.config.ts)
 
+## Coding Standards Enforcement
+
+### Build-Time Enforcement ([Directory.Build.props](../../Directory.Build.props))
+
+```xml
+<TreatWarningsAsErrors>true</TreatWarningsAsErrors>   <!-- ALL warnings = errors -->
+<ImplicitUsings>enable</ImplicitUsings>                <!-- SDK-provided global usings -->
+<UseArtifactsOutput>true</UseArtifactsOutput>           <!-- Output to artifacts/ -->
+<DebugType>embedded</DebugType>                         <!-- PDBs embedded in assemblies -->
+<NoWarn>NU1901;NU1902;NU1903;NU1904</NoWarn>            <!-- Suppress NuGet transitive audit -->
+```
+
+**Impact**: Every compiler warning, SDK analyzer rule, and Roslyn diagnostic is a build error. New code must produce zero warnings.
+
+### Analyzers
+
+| Analyzer | Scope | Purpose |
+|----------|-------|---------|
+| .NET 10 SDK built-in analyzers | All projects | CA*/IDE* rules at default severity |
+| `NSubstitute.Analyzers.CSharp` | Test projects only | Catches NSubstitute API misuse |
+| `MSTestAnalysisMode=Recommended` | MSTest projects | MSTest best-practice rules |
+
+No third-party style analyzers (no StyleCop, Roslynator, etc.). The SDK built-in analyzers + `TreatWarningsAsErrors` are the enforcement mechanism.
+
+### Code Style ([.editorconfig](../../.editorconfig))
+
+All style rules are `:silent` or `:suggestion` — they guide IDE behavior but don't break builds:
+
+| Rule | Setting |
+|------|---------|
+| Indentation | 4 spaces (C#), 2 spaces (XML/csproj) |
+| Charset | `utf-8-bom` |
+| `var` usage | Prefer `var` everywhere |
+| `this.` qualification | Never |
+| Language keywords | Prefer `int` over `Int32` |
+| Braces | Allman style (newline before `{`) |
+| Braces presence | Always use braces |
+| Modifier order | `public, private, protected, internal, static, ...` |
+| Usings | Sort `System.*` first |
+| Constants | PascalCase |
+| Readonly fields | Mark `readonly` when possible |
+| Pattern matching | Prefer `is`/`as` patterns |
+
+### Nullable Reference Types
+
+Enabled **per-project** (not globally):
+
+| `<Nullable>enable</Nullable>` | No explicit `<Nullable>` (disabled) |
+|-------------------------------|--------------------------------------|
+| Catalog.API, WebApp, WebAppComponents, eShop.AppHost, eShop.ServiceDefaults, WebhookClient, HybridApp, ClientApp.UnitTests | Ordering.API, Ordering.Domain, Basket.API, Identity.API, Webhooks.API, EventBus, EventBusRabbitMQ, OrderProcessor, PaymentProcessor |
+
+**When creating new projects**: Enable nullable (`<Nullable>enable</Nullable>`) for new code. When modifying existing projects, respect their current setting.
+
+### Project-Level Warning Suppressions
+
+Only these suppressions are acceptable:
+
+| Project | `NoWarn` | Reason |
+|---------|----------|--------|
+| WebApp | `RZ10021` | Razor component attribute |
+| ClientApp | `XC0103` | MAUI Xamarin compatibility |
+| EventBus (code) | `IL2026`, `IL3050` | AOT/trimming via `#pragma` |
+| EF Migrations | `612`, `618` | Auto-generated obsolete APIs |
+
+Do **not** add new `<NoWarn>` entries or `#pragma warning disable` without justification.
+
+### Test Project Standards ([tests/Directory.Build.props](../../tests/Directory.Build.props))
+
+- Test SDK: `<Project Sdk="MSTest.Sdk">` for unit tests
+- `MSTestAnalysisMode=Recommended` — enables recommended MSTest analyzer rules
+- `UseMicrosoftTestingPlatformRunner=true` for xUnit projects
+- `NSubstitute.Analyzers.CSharp` added to unit test projects
+- Test runner: `Microsoft.Testing.Platform` (configured in [global.json](../../global.json))
+
 ## Package Management
 
 - **Central Package Management**: All versions in [Directory.Packages.props](../../Directory.Packages.props)

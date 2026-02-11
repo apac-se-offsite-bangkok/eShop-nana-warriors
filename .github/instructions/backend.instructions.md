@@ -180,3 +180,26 @@ builder.AddRabbitMqEventBus("eventbus")
 - Services call `AddDefaultAuthentication()` from ServiceDefaults — validates JWT Bearer tokens
 - Catalog.API has **no auth** (public access)
 - Basket.API, Ordering.API, Webhooks.API require JWT Bearer for mutating operations
+
+## Backend Code Style
+
+### API Endpoint Style
+
+- Use **Minimal APIs** (not controllers) for all new REST endpoints
+- Endpoints return `Results.Ok()`, `Results.NotFound()`, `Results.BadRequest()` etc. (typed results)
+- Use `TypedResults` over `Results` where possible for OpenAPI inference
+- Apply `.WithName()`, `.WithSummary()`, `.WithDescription()` for API documentation
+
+### Domain Model Style (Ordering)
+
+- **Private setters** on entity properties — no public mutable state
+- **Private backing fields** for collections: `private readonly List<OrderItem> _orderItems`
+- **Public readonly accessor**: `public IReadOnlyCollection<OrderItem> OrderItems => _orderItems`
+- **Constructor null guards**: `?? throw new ArgumentNullException(nameof(param))` (in Ordering domain code)
+- **No anemic models**: State changes through methods, never direct property assignment
+
+### Async Conventions
+
+- All I/O methods must be `async Task` / `async Task<T>` — no `.Result` or `.Wait()`
+- Suffix async methods with `Async` only on interface contracts (`SaveEntitiesAsync`, `PublishAsync`)
+- Pass `CancellationToken` through the call chain where available

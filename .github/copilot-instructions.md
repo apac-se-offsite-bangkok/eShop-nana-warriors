@@ -124,6 +124,40 @@ npx playwright install && npx playwright test
 - **DI setup**: Each service registers its dependencies in `AddApplicationServices()` inside `Extensions/Extensions.cs`
 - **Health checks**: All services expose `/health` (readiness) and `/alive` (liveness) via `MapDefaultEndpoints()`
 
+## Coding Standards (Enforced)
+
+**All warnings are build errors.** `TreatWarningsAsErrors=true` is set globally in [Directory.Build.props](../Directory.Build.props). Any C# compiler or SDK analyzer warning will fail the build. This is the primary enforcement mechanism — treat it seriously.
+
+### Must-follow rules
+
+- **Zero warnings**: Fix all warnings before committing — they are errors in CI
+- **No inline package versions**: Use `<PackageReference Include="..." />` without `Version=`. All versions live in [Directory.Packages.props](../Directory.Packages.props)
+- **File-scoped namespaces**: Use `namespace Foo.Bar;` (not block-scoped `namespace Foo.Bar { }`)
+- **`var` everywhere**: Prefer `var` for local variable declarations
+- **No `this.` qualification**: Omit `this.` prefix on members
+- **Language keywords over framework types**: Use `int`, `string`, `bool` — not `Int32`, `String`, `Boolean`
+- **Sort usings**: `System.*` imports first (`dotnet_sort_system_directives_first = true`)
+- **Global usings per project**: Each project has a `GlobalUsings.cs` with project-specific imports
+- **Primary constructors**: Prefer for newer service classes (e.g., `public class MyService(HttpClient client)`)
+- **Nullable reference types**: Enabled per-project (Catalog.API, WebApp, WebAppComponents, ServiceDefaults, AppHost) — respect the project's setting
+
+### .editorconfig style (IDE guidance, `:silent`/`:suggestion` severity)
+
+- **Indentation**: 4 spaces for C#, 2 spaces for XML/project files
+- **Charset**: `utf-8-bom` for code files
+- **Braces**: Allman style (`csharp_new_line_before_open_brace = all`)
+- **Constants**: PascalCase naming
+- **Modifier order**: `public, private, protected, internal, static, extern, new, virtual, abstract, sealed, override, readonly, unsafe, volatile, async`
+- **Readonly fields**: Mark fields `readonly` when possible
+- **Pattern matching**: Prefer `is`/`as` patterns over casts
+
+### Allowed warning suppressions
+
+- `NU1901-NU1904` — NuGet transitive security audit (globally suppressed)
+- `RZ10021` — Razor component warning (WebApp only)
+- `IL2026`, `IL3050` — AOT/trimming compatibility (EventBus only, via `#pragma`)
+- EF migration files — `612, 618` (auto-generated, do not modify)
+
 ## Detailed Instructions
 
 See topic-specific instructions in [.github/instructions/](.github/../instructions/):

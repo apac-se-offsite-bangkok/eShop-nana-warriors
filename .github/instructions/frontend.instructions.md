@@ -112,6 +112,30 @@ src/ClientApp/
 - Stores received hooks in-memory (`HooksRepository`)
 - Displays received hooks in Blazor UI
 
+## Frontend Code Style
+
+### Blazor Component Standards
+
+- Use `[Parameter, EditorRequired]` for all required component parameters — enforces compile-time safety
+- CSS isolation (`.razor.css`) for component-scoped styles — no global CSS for component styling
+- Use `@inject` for service injection in components — not constructor injection
+- Prefer `@attribute [StreamRendering]` on data-loading pages for progressive rendering
+- Use `@attribute [Authorize]` on pages requiring authentication
+
+### Service Layer Standards
+
+- Services use **primary constructors**: `public class MyService(HttpClient httpClient)`
+- All HTTP clients registered via `AddHttpClient()` with Aspire service discovery names
+- Always propagate auth tokens via `AddAuthToken()` for authenticated API calls
+- Use `async`/`await` consistently — no blocking calls (`.Result`, `.Wait()`)
+
+### MAUI / ClientApp Standards
+
+- Follow **MVVM pattern**: Views (XAML) bind to ViewModels, ViewModels use Services
+- No business logic in Views — delegate to ViewModels
+- Use `INotifyPropertyChanged` / `ObservableCollection<T>` for data binding
+- Validate form inputs using the `Validations/` framework
+
 ## Frontend Development Checklist
 
 When adding a new frontend feature:
