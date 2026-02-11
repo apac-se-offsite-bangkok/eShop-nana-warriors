@@ -25,7 +25,14 @@ cloud-native, microservices-style applications with .NET.
 
 ## 2. Build Commands
 
-### Build the full solution (excluding MAUI/mobile)
+### Build the full solution (excluding MAUI/mobile) — matches CI
+
+```bash
+dotnet restore eShop.Web.slnf
+dotnet build eShop.Web.slnf --no-restore --configuration Release
+```
+
+### Build for local development (Debug, implicit restore)
 
 ```bash
 dotnet build eShop.Web.slnf
@@ -55,6 +62,9 @@ dotnet run --project src/eShop.AppHost/eShop.AppHost.csproj
 ---
 
 ## 3. Test Commands
+
+> **Note**: Tests are **not currently run in CI**. The GitHub Actions workflow
+> only builds the solution. Run tests locally before submitting PRs.
 
 ### Run all tests (web projects only — recommended)
 
@@ -264,8 +274,8 @@ eShop/
 
 When submitting pull requests:
 
-1. **Build must pass**: `dotnet build eShop.Web.slnf` with zero warnings (warnings are errors).
-2. **Tests must pass**: `dotnet test eShop.Web.slnf`.
+1. **Build must pass**: `dotnet build eShop.Web.slnf --configuration Release` with zero warnings (warnings are errors). This is enforced by CI.
+2. **Tests must pass locally**: `dotnet test eShop.Web.slnf` (not yet enforced in CI, but required before merging).
 3. **Follow existing patterns**: Match the coding style in `.editorconfig` and existing code.
 4. **Keep PRs focused**: One logical change per PR.
 5. **Include tests**: Add unit tests for new logic; add functional tests for new API endpoints.
@@ -299,10 +309,23 @@ When submitting pull requests:
 The GitHub Actions workflow at `.github/workflows/build-and-test.yml` runs on pushes
 to `main`, `develop`, and `copilot/**` branches, and on PRs to `main`/`develop`.
 
+### What CI does today
+
+1. Checks out the repo
+2. Installs .NET 10 SDK (preview)
+3. Restores dependencies: `dotnet restore eShop.Web.slnf`
+4. Builds the solution: `dotnet build eShop.Web.slnf --no-restore --configuration Release`
+
+### What CI does NOT do (yet)
+
+- **Tests are not run in CI.** Run `dotnet test eShop.Web.slnf` locally.
+- No E2E / Playwright tests in this workflow.
+
+### SDK requirement
+
 **Critical**: The workflow **must** use .NET 10 SDK (with `dotnet-quality: 'preview'`)
 to match the project's `global.json` requirement of SDK `10.0.100`. Using an older SDK
-(e.g., .NET 8) will cause zero tests to run and 4 errors because the test assemblies
-won't be built for the correct target framework.
+(e.g., .NET 8) will cause build failures.
 
 ```yaml
 - name: Setup .NET 10
@@ -331,8 +354,12 @@ won't be built for the correct target framework.
 ## 13. Quick Reference for Agents
 
 ```bash
-# Validate a change end-to-end
-dotnet build eShop.Web.slnf && dotnet test eShop.Web.slnf
+# CI-equivalent build (must pass before any PR)
+dotnet restore eShop.Web.slnf
+dotnet build eShop.Web.slnf --no-restore --configuration Release
+
+# Run tests locally (not in CI yet, but required before merging)
+dotnet test eShop.Web.slnf
 
 # Run just unit tests (fast)
 dotnet test tests/Basket.UnitTests && dotnet test tests/Ordering.UnitTests
