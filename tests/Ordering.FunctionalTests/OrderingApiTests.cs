@@ -240,4 +240,104 @@ public sealed class OrderingApiTests : IClassFixture<OrderingApiFixture>
         };
         return JsonSerializer.Serialize(order);
     }
+
+    [Fact]
+    public async Task CreateOrder_WithNullCardNumber_ReturnsBadRequest()
+    {
+        // Arrange: Build order payload with null card number
+        var basketItem = new BasketItem
+        {
+            Id = "test-item-1",
+            ProductId = 5,
+            ProductName = "Sample Product",
+            UnitPrice = 25.99m,
+            OldUnitPrice = 20.00m,
+            Quantity = 2,
+            PictureUrl = null
+        };
+
+        var expiryDate = DateTime.UtcNow.AddYears(2);
+        var orderPayload = new CreateOrderRequest(
+            UserId: "test-user-123",
+            UserName: "TestUserName",
+            City: "Seattle",
+            Street: "123 Main St",
+            State: "WA",
+            Country: "USA",
+            ZipCode: "98101",
+            CardNumber: null,  // Bug trigger: null card number
+            CardHolderName: "John Doe",
+            CardExpiration: expiryDate,
+            CardSecurityNumber: "123",
+            CardTypeId: 1,
+            Buyer: "buyer@test.com",
+            Items: new List<BasketItem> { basketItem }
+        );
+
+        var jsonPayload = new StringContent(
+            JsonSerializer.Serialize(orderPayload),
+            UTF8Encoding.UTF8,
+            "application/json")
+        {
+            Headers = { { "x-requestid", Guid.NewGuid().ToString() } }
+        };
+
+        // Act: Submit order creation request
+        var httpResponse = await _httpClient.PostAsync("api/orders", jsonPayload, TestContext.Current.CancellationToken);
+        var responseBody = await httpResponse.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+
+        // Assert: Should return 400 Bad Request, not 500 error
+        Assert.Equal(HttpStatusCode.BadRequest, httpResponse.StatusCode);
+        Assert.Contains("CardNumber", responseBody);
+    }
+
+    [Fact]
+    public async Task CreateOrder_WithEmptyCardNumber_ReturnsBadRequest()
+    {
+        // Arrange: Build order with empty string card number
+        var product = new BasketItem
+        {
+            Id = "empty-test",
+            ProductId = 7,
+            ProductName = "Widget",
+            UnitPrice = 15.50m,
+            OldUnitPrice = 12.00m,
+            Quantity = 1,
+            PictureUrl = null
+        };
+
+        var futureExpiry = DateTime.UtcNow.AddMonths(18);
+        var orderData = new CreateOrderRequest(
+            UserId: "user-456",
+            UserName: "AnotherUser",
+            City: "Portland",
+            Street: "456 Oak Ave",
+            State: "OR",
+            Country: "USA",
+            ZipCode: "97201",
+            CardNumber: "",  // Bug trigger: empty card number
+            CardHolderName: "Jane Smith",
+            CardExpiration: futureExpiry,
+            CardSecurityNumber: "456",
+            CardTypeId: 2,
+            Buyer: "jane@example.com",
+            Items: new List<BasketItem> { product }
+        );
+
+        var requestBody = new StringContent(
+            JsonSerializer.Serialize(orderData),
+            UTF8Encoding.UTF8,
+            "application/json")
+        {
+            Headers = { { "x-requestid", Guid.NewGuid().ToString() } }
+        };
+
+        // Act: POST the order
+        var result = await _httpClient.PostAsync("api/orders", requestBody, TestContext.Current.CancellationToken);
+        var textResponse = await result.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+
+        // Assert: Expect 400 status with validation message
+        Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
+        Assert.Contains("CardNumber", textResponse);
+    }
 }
