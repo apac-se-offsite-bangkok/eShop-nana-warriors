@@ -1,0 +1,52 @@
+ADVENTUREWORKS TERMS AND CONDITIONS
+
+Last Updated: February 11, 2026
+
+1. ACCEPTANCE OF TERMS
+By accessing or using the AdventureWorks e-commerce platform ("Service"), you agree to be bound by these Terms and Conditions ("Terms"). If you do not agree to these Terms, you may not use the Service.
+
+2. USE OF THE SERVICE
+2.1. You must be at least 18 years of age to use this Service.
+2.2. You are responsible for maintaining the confidentiality of your account credentials.
+2.3. You agree to provide accurate, current, and complete information during registration.
+
+3. PRODUCTS AND PRICING
+3.1. All product descriptions, images, and specifications are provided for informational purposes and are subject to change without notice.
+3.2. Prices are displayed in the applicable currency and do not include applicable taxes or shipping fees unless stated otherwise.
+3.3. AdventureWorks reserves the right to modify prices at any time prior to order confirmation.
+
+4. ORDERS AND PAYMENT
+4.1. Placing an order constitutes an offer to purchase. AdventureWorks reserves the right to accept or decline any order.
+4.2. Payment must be completed at the time of order placement using an accepted payment method.
+4.3. Orders are subject to product availability.
+
+5. SHIPPING AND DELIVERY
+5.1. Delivery times are estimates and are not guaranteed.
+5.2. Risk of loss transfers to the buyer upon delivery to the carrier.
+5.3. AdventureWorks is not responsible for delays caused by carriers or customs processing.
+
+6. RETURNS AND REFUNDS
+6.1. Products may be returned within 30 days of delivery in their original condition and packaging.
+6.2. Refunds will be processed to the original payment method within 10 business days of receiving the returned item.
+6.3. Shipping costs for returns are the responsibility of the buyer unless the return is due to a defect or error.
+
+7. INTELLECTUAL PROPERTY
+7.1. All content on the Service, including text, images, logos, and software, is the property of AdventureWorks and is protected by applicable intellectual property laws.
+7.2. You may not reproduce, distribute, or create derivative works from any content without prior written consent.
+
+8. LIMITATION OF LIABILITY
+8.1. To the maximum extent permitted by law, AdventureWorks shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of the Service.
+8.2. AdventureWorks' total liability shall not exceed the amount paid by you for the product or service giving rise to the claim.
+
+9. PRIVACY
+9.1. Your use of the Service is also governed by our Privacy Policy.
+9.2. By using the Service, you consent to the collection and use of your information as described in the Privacy Policy.
+
+10. GOVERNING LAW
+These Terms are governed by and construed in accordance with applicable laws. Any disputes shall be resolved in the appropriate courts of competent jurisdiction.
+
+11. CHANGES TO TERMS
+AdventureWorks reserves the right to modify these Terms at any time. Changes become effective upon posting to the Service. Continued use of the Service after changes constitutes acceptance of the modified Terms.
+
+12. CONTACT
+For questions about these Terms, please contact us through the AdventureWorks support channels.
