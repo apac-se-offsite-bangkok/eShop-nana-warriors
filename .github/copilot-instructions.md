@@ -165,3 +165,123 @@ See topic-specific instructions in [.github/instructions/](.github/../instructio
 - [common.instructions.md](instructions/common.instructions.md) — shared patterns, event bus, service defaults, testing
 - [backend.instructions.md](instructions/backend.instructions.md) — API services, DDD, CQRS, integration events
 - [frontend.instructions.md](instructions/frontend.instructions.md) — Blazor, WebAppComponents, MAUI apps
+
+## PR Review Standard (.NET / C#)
+
+To eliminate "PR quality depends on who reviews", we use a shared rubric that is:
+- **Consistent** (same checks every PR)
+- **Automation-first** (CI catches repeatable issues)
+- **Stricter for AI-assisted code** (verify APIs, logic, and tests)
+
+### Required PR description (author must provide)
+
+#### Summary
+- What changed and why (business impact for the eCommerce flow)
+
+#### How to test
+- Commands run locally (examples; adjust to repo):
+  - `dotnet test`
+  - Any specific test project(s) touched
+- Manual steps (especially for UI flows):
+  - Browse category/search/product detail
+  - Add to cart / update quantities
+  - Checkout path (if present)
+  - Admin/catalog management (if present)
+
+#### Risk & rollout
+- Risk: low / medium / high
+- Data impact: any EF Core migrations? seed data changes?
+- Rollback plan (if schema changes)
+
+#### AI assistance (if used)
+- Where Copilot/AI helped
+- What reviewers should double-check (APIs, security-sensitive logic, etc.)
+
+### Reviewer checklist (use on every PR)
+
+#### 1) Scope & correctness (eCommerce-focused)
+- Change matches PR intent; no unrelated refactors bundled in
+- User-visible behavior is correct for key flows (browse → cart → checkout)
+- Pricing/totals/taxes/discount logic is correct (watch rounding + currency)
+- Inventory/availability rules make sense (no negative stock, oversell rules explicit)
+- Error paths handled (timeouts, nulls, invalid ids, missing products)
+
+#### 2) Tests (bar for merge)
+- New behavior has automated tests (unit/integration) OR a clear justification
+- Tests cover at least:
+  - happy path
+  - one important edge case
+  - one failure/validation case
+- No "assert true"-style tests; assertions match business meaning
+
+**.NET specifics**
+- Tests are deterministic (no `DateTime.Now` / random / environment coupling without control)
+- If web layer changed, consider endpoint/controller tests or service-level tests
+
+#### 3) API & architecture boundaries
+- Controller actions stay thin; business logic in services/domain where appropriate
+- No leaking EF Core entities directly where a DTO/view model is intended (consistency)
+- Async usage correct (`async/await` end-to-end; avoid `.Result`/`.Wait()`)
+
+#### 4) Data & EF Core (if applicable)
+- Queries are efficient (avoid N+1; use includes/projections intentionally)
+- Migrations reviewed carefully:
+  - correct types/lengths/indexes
+  - safe defaults/backfills
+  - reversible where possible
+- Transactions used appropriately for multi-step updates (orders, payments, inventory)
+
+#### 5) Security & privacy (minimum bar for any web app)
+- No secrets in config/code; no credentials committed
+- Sensitive data not logged (PII, tokens, payment-like fields)
+- AuthZ checks are explicit for privileged actions (catalog/admin/order mgmt)
+- Input validation present (model validation, server-side checks)
+- Output encoding/HTML rendering is safe (especially if any HTML templates changed)
+
+#### 6) Reliability & operability
+- Exceptions handled appropriately; user gets a safe error message
+- Logging is actionable (no noisy logs; include correlation ids if used)
+- Configuration changes documented (appsettings, environment variables)
+
+#### 7) Performance
+- No obvious heavy loops or repeated DB calls per request
+- Caching decisions are safe and correct for eCommerce data (prices/stock can be tricky)
+
+#### 8) Front-end (HTML/CSS) changes
+- Layout works for typical breakpoints (desktop/mobile if relevant)
+- No inline styles unless consistent with repo patterns
+- Accessibility basics: labels, buttons, contrast (where touched)
+
+#### 9) AI-specific checks (Copilot-assisted code)
+- Confirm any referenced framework APIs actually exist (no hallucinated methods/options)
+- Walk through critical paths (order placement, totals, auth) line-by-line
+- Ensure tests meaningfully cover AI-generated logic
+- Watch for insecure string building (SQL, HTML, URLs)
+
+### Comment taxonomy (to reduce reviewer variance)
+Use these prefixes in review comments:
+- **blocker:** correctness/security/data loss; must fix before merge
+- **major:** maintainability/reliability; should fix before merge
+- **minor:** improvement; fix if easy, otherwise follow-up
+- **nit:** style preference
+- **question:** clarify intent
+
+### Automation expectations (quality at AI speed)
+The goal: humans review *design & correctness*, automation checks *repeatable rules*.
+
+Recommended required checks:
+- Build (Release)
+- `dotnet test`
+- Lint/format (if you use `dotnet format` or analyzers)
+- Security scanning (Dependabot alerts, dependency review)
+- Code scanning (CodeQL) if enabled
+
+Also recommended via branch protection:
+- Require at least **1–2 approvals**
+- Dismiss stale approvals on new commits
+- Require status checks to pass
+- Optional: require code owner review for sensitive areas
+
+### GitHub Docs references
+- [Review AI-generated code](https://docs.github.com/en/enterprise-cloud@latest/copilot/tutorials/review-ai-generated-code)
+- [Accelerating pull requests with GitHub Copilot](https://docs.github.com/en/enterprise-cloud@latest/copilot/tutorials/roll-out-at-scale/drive-downstream-impact/accelerate-pull-requests)
