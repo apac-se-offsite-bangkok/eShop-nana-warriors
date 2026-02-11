@@ -24,18 +24,11 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Install .NET MAUI workloads
-        run: |
-          dotnet workload install maui
-          dotnet workload install android
-          dotnet workload install ios
-          dotnet workload install maccatalyst
-
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore eShop.Web.slnf
 
       - name: Build solution
-        run: dotnet build --no-restore --configuration Release
+        run: dotnet build eShop.Web.slnf --no-restore --configuration Release
 
       - name: Run tests
-        run: dotnet test --no-build --configuration Release --verbosity normal
+        run: dotnet test eShop.Web.slnf --no-build --configuration Release --verbosity normal
